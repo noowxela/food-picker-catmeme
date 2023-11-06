@@ -1,0 +1,17 @@
+{
+  "apps": [
+    {
+      "name": "Lunch-picker",
+      "script": "app.js",
+      "error_file": "./Lunch-picker-production_err.log",
+      "out_file": "./Lunch-picker-production_out.log",
+      "instances": 1,
+      "autorestart": true,
+      "watch": false,
+      "time": true,
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
