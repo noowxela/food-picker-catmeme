@@ -1,3 +1,15 @@
 .DS_Store
-/node_modules/
 /dist/
+
+# Dependencies
+node_modules
+
+# yarn error logs
+yarn-error.log
+
+# Environment varibales
+.env*
+!.env*.example
+
+# Code coverage
+coverage
