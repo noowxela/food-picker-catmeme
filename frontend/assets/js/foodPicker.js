@@ -60,14 +60,14 @@ $(document).ready(function () {
   }
 
   $("#findFood").on("click", async function () {
-    await getRestaurantData(1);
+    await getRandomRestaurantData(1);
     fetchCatImages();
   });
 
   // Function to retrieve restaurant data from the API
-  function getRestaurantData(page) {
+  function getRandomRestaurantData(page) {
     return new Promise(function (resolve, reject) {
-      const apiEndpoint = ENDPOINT + "restaurants";
+      const apiEndpoint = ENDPOINT + "restaurants/randomRestaurants";
 
       const filterName = $("#filter_name").val();
       const filterAddress = $("#filter_address").val();
@@ -99,7 +99,7 @@ $(document).ready(function () {
         data: { page: page },
         success: function (data) {
           restaurantData = data.results;
-          toggleRestaurantResults(data.totalResults);
+          toggleRestaurantResults(data.total);
 
           resolve(data); // Resolve the promise with the data
         },
@@ -172,14 +172,14 @@ $(document).ready(function () {
 
   $("#resetFilter").on("click", async function () {
     clearFilter();
-    await getRestaurantData(1);
+    await getRandomRestaurantData(1);
     fetchCatImages();
   });
 
   async function init() {
     await getRestaurantHistoryData(1);
     clearFilter();
-    await getRestaurantData(1);
+    await getRandomRestaurantData(1);
     fetchCatImages();
   }
 

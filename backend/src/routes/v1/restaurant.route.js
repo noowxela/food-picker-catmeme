@@ -13,6 +13,7 @@ router
 
 router.route('/chooseVisit/:restaurantId').post(restaurantController.visitRestaurant);
 router.route('/restaurantHistory').get(restaurantController.restaurantHistory);
+router.route('/randomRestaurants').get(restaurantController.randomRestaurants);
 
 router
   .route('/:restaurantId')
