@@ -36,7 +36,7 @@ $(document).ready(function () {
                     <div class="social">
                     <a href="#" class="social-icon animate">${restaurant.category}</a>
                     </div>
-                    <button class="btn btn-primary btn-choose" id="chooseThisAsLunch" data-id="${restaurant.id}">
+                    <button class="btn btn-primary btn-choose" id="chooseThisAsLunch" data-id="${restaurant._id}">
                         Choose This as lunch
                     </button>
                   </div>
