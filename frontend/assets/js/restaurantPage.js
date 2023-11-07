@@ -1,17 +1,39 @@
 $(document).ready(function () {
-  // Define the API endpoint to fetch restaurant data
   const ENDPOINT = "http://localhost:3000/v1/";
 
-  // You should determine the total number of pages and pass it to createPagination
-  let totalPages = 1; // Replace with the actual total number of pages
+  let totalPages = 1;
   var deleteRestaurantId = 1;
 
   // Function to retrieve restaurant data from the API
   function getRestaurantData(page) {
     const apiEndpoint = ENDPOINT + "restaurants";
 
+    const filterName = $("#filter_name").val();
+    const filterAddress = $("#filter_address").val();
+    const filterCategory = $("#filter_category").val();
+
+    // Initialize an empty query string
+    let queryString = "";
+
+    // Conditionally add filter parameters to the query string
+    if (filterName) {
+      queryString += `name=${filterName}&`;
+    }
+    if (filterAddress) {
+      queryString += `address=${filterAddress}&`;
+    }
+    if (filterCategory) {
+      queryString += `category=${filterCategory}&`;
+    }
+
+    // Remove the trailing '&' character
+    queryString = queryString.slice(0, -1);
+
+    // Construct the URL for the API endpoint
+    const apiUrl = apiEndpoint + (queryString ? `?${queryString}` : "");
+
     $.ajax({
-      url: apiEndpoint,
+      url: apiUrl,
       method: "GET",
       data: { page: page },
       success: function (data) {
@@ -19,6 +41,9 @@ $(document).ready(function () {
         // Populate the table with restaurant data
         const restaurantList = $("#restaurant-list");
         restaurantList.empty();
+        data.totalResults === 0
+          ? toggleNoResultsRow(true)
+          : toggleNoResultsRow(false);
         totalPages = data.totalPages;
         data.results.forEach(function (restaurant) {
           const deleteButton = `
@@ -109,6 +134,7 @@ $(document).ready(function () {
   }
 
   // Initial call to retrieve the first page of data
+  clearFilter();
   getRestaurantData(1);
 
   // // Initialize Bootstrap popovers
@@ -136,6 +162,14 @@ $(document).ready(function () {
       return null;
     }
     createRestaurant();
+  });
+
+  $("#search").click(function (event) {
+    getRestaurantData(1);
+  });
+  $("#resetFilter").on("click", function () {
+    clearFilter();
+    getRestaurantData(1);
   });
 
   // Function to validate the form fields
@@ -191,6 +225,19 @@ $(document).ready(function () {
       },
     });
   }
+  function toggleNoResultsRow(show) {
+    if (show) {
+      const restaurantList = $("#restaurant-list");
+      restaurantList.append(
+        `<tr id="noResultsRow">
+            <td colspan="4">
+                <p class="alert alert-danger">No matching results found.</p>
+            </td>
+        </tr>
+        `
+      );
+    }
+  }
   // Function to clear the form fields
   function clearFormFields() {
     $("#name").val("");
@@ -198,5 +245,10 @@ $(document).ready(function () {
     $("#category").val("");
     $("#pork-free").prop("checked", false);
     $("#walk-in-only").prop("checked", false);
+  }
+  function clearFilter() {
+    $("#filter_name").val("");
+    $("#filter_address").val("");
+    $("#filter_category").val("");
   }
 });

@@ -24,6 +24,18 @@ const createRestaurant = async (restaurantBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryRestaurants = async (filter, options) => {
+  if (filter['name']) {
+    filter['name'] = { $regex: filter.name, $options: 'i' };
+  }
+
+  if (filter['address']) {
+    filter['address'] = { $regex: filter.address, $options: 'i' };
+  }
+
+  if (filter['category']) {
+    filter['category'] = { $regex: filter.category, $options: 'i' };
+  }
+
   const restaurants = await Restaurant.paginate(filter, options);
   return restaurants;
 };

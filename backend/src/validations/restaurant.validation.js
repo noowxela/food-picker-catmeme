@@ -4,8 +4,10 @@ const { password, objectId } = require('./custom.validation');
 const createRestaurant = {
   body: Joi.object().keys({
     name: Joi.string().required(),
-    address: Joi.string(),
-    category: Joi.string(),
+    address: Joi.string().required(),
+    category: Joi.string().required(),
+    porkFree: Joi.boolean().default(false),
+    walkInOnly: Joi.boolean().default(false),
   }),
 };
 

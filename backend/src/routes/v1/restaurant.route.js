@@ -8,13 +8,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageRestaurants'), validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
-  .get(auth('getRestaurants'), validate(restaurantValidation.getRestaurants), restaurantController.getRestaurants);
+  .post(validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
+  .get(validate(restaurantValidation.getRestaurants), restaurantController.getRestaurants);
 
 router
   .route('/:restaurantId')
-  .get(auth('getRestaurants'), validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant)
-  .patch(auth('manageRestaurants'), validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
-  .delete(auth('manageRestaurants'), validate(restaurantValidation.deleteRestaurant), restaurantController.deleteRestaurant);
+  .get(validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant)
+  .patch(validate(restaurantValidation.updateRestaurant), restaurantController.updateRestaurant)
+  .delete(validate(restaurantValidation.deleteRestaurant), restaurantController.deleteRestaurant);
 
 module.exports = router;
