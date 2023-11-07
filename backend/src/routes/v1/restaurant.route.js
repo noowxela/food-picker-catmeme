@@ -11,6 +11,9 @@ router
   .post(validate(restaurantValidation.createRestaurant), restaurantController.createRestaurant)
   .get(validate(restaurantValidation.getRestaurants), restaurantController.getRestaurants);
 
+router.route('/chooseVisit/:restaurantId').post(restaurantController.visitRestaurant);
+router.route('/restaurantHistory').get(restaurantController.restaurantHistory);
+
 router
   .route('/:restaurantId')
   .get(validate(restaurantValidation.getRestaurant), restaurantController.getRestaurant)

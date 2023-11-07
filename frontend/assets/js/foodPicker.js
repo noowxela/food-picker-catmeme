@@ -49,6 +49,7 @@ $(document).ready(function () {
           $(".btn-choose").click(function () {
             chooseRestaurantId = $(this).data("id");
             console.log("chooseRestaurantId : ", chooseRestaurantId);
+            chooseRestaurant(chooseRestaurantId);
           });
         }
       },
@@ -110,6 +111,65 @@ $(document).ready(function () {
     });
   }
 
+  function getRestaurantHistoryData(page) {
+    return new Promise(function (resolve, reject) {
+      const apiEndpoint = ENDPOINT + "restaurants/restaurantHistory";
+
+      const historyList = $("#history-list");
+      historyList.empty();
+      $.ajax({
+        url: apiEndpoint,
+        method: "GET",
+        data: { page: page },
+        success: function (data) {
+          data.forEach(function (history) {
+            const formattedDate = formatDate(history.bookingDate);
+            historyList.append(
+              `<tr>
+              <td>${history.restaurant.name}</td>
+              <td>${formattedDate}</td>
+            </tr>`
+            );
+          });
+          resolve(data); // Resolve the promise with the data
+        },
+        error: function (error) {
+          console.log("Error fetching data: ", error);
+          reject(error); // Reject the promise with an error
+        },
+      });
+    });
+  }
+
+  // Function to delete a restaurant (you need to implement this)
+  function chooseRestaurant(restaurantId) {
+    const apiEndpoint = ENDPOINT + "restaurants/chooseVisit";
+
+    // Make an API request to delete the restaurant by its ID
+    $.ajax({
+      url: `${apiEndpoint}/${restaurantId}`,
+      method: "POST",
+      success: function () {
+        // $("#successNotification").fadeIn();
+        // $("#successNotification p").text("Restaurant deleted successfully.");
+
+        // setTimeout(function () {
+        //   $("#successNotification").fadeOut();
+        // }, 3000);
+
+        getRestaurantHistoryData(1);
+      },
+      error: function (error) {
+        console.log("Error chooseVisit restaurant: ", error);
+        // $("#errorNotification").fadeIn();
+        // $("#errorNotification p").text(error.responseJSON.message);
+        // setTimeout(function () {
+        //   $("#errorNotification").fadeOut();
+        // }, 5000);
+      },
+    });
+  }
+
   $("#resetFilter").on("click", async function () {
     clearFilter();
     await getRestaurantData(1);
@@ -117,6 +177,7 @@ $(document).ready(function () {
   });
 
   async function init() {
+    await getRestaurantHistoryData(1);
     clearFilter();
     await getRestaurantData(1);
     fetchCatImages();
@@ -129,6 +190,21 @@ $(document).ready(function () {
     restaurantTotalElement.innerHTML = `Showing ${
       total > 10 ? 10 : total
     } matched random Restaurant `;
+  }
+
+  function formatDate(dateString) {
+    const options = {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      weekday: "long",
+    };
+
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-US", options);
+    return formattedDate;
   }
 
   function clearFilter() {
