@@ -7,7 +7,7 @@ services:
     rootDir: backend
     plan: free
     region: singapore
-    buildCommand: npm --prefix backend ci || npm --prefix backend install
+    buildCommand: npm --prefix backend ci --omit=dev --legacy-peer-deps || npm --prefix backend install --omit=dev --legacy-peer-deps
     startCommand: npm --prefix backend run start:render
     healthCheckPath: /v1/restaurants
     envVars:
