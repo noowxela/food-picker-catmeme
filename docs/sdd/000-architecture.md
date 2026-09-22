@@ -24,4 +24,7 @@ Client config comes from `assets/js/config.js` (`window.API_BASE`, `window.CAT_A
 
 `project-appxplore` holds `restaurants`, `bookings`, `users`, and `tokens`. Cat photos are not stored. They come from `https://api.thecatapi.com/v1/images/search`.
 
-Deploy steps: [`docs/deploy.md`](../deploy.md).
+Deploy steps: [`docs/deploy.md`](../deploy.md).  
+Expanded architecture: [`docs/architecture.md`](../architecture.md).
+
+Expanded overview (diagrams, API table, data model): [`docs/architecture.md`](../architecture.md).
