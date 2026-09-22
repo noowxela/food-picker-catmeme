@@ -2,7 +2,7 @@
 # Docs: https://render.com/docs/blueprint-spec
 services:
   - type: web
-    name: food-picker-catmeme-api
+    name: food-picker-api
     runtime: node
     rootDir: backend
     plan: free
