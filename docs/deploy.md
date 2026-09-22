@@ -13,7 +13,7 @@ Public demo layout:
 1. Open [Render Blueprints](https://dashboard.render.com/blueprints) and connect `noowxela/food-picker-catmeme`, **or** use the live service already created:
    - Dashboard: https://dashboard.render.com/web/srv-dap55e8ae00c73946jtg
    - URL: https://food-picker-api.onrender.com
-2. Env already set for Atlas `project-appxplore`. If you recreate the service, set `MONGODB_URL` and `NODE_VERSION=20.18.1`.
+2. Env already set for Atlas `project-appxplore`. If you recreate the service, set `MONGODB_URL` and `NODE_VERSION=24.21.0`.
 3. In Atlas Network Access, allow Render (or `0.0.0.0/0` for a free demo).
 4. Confirm `GET https://food-picker-api.onrender.com/v1/restaurants` returns JSON.
 5. Free plan sleeps when idle; the first request after sleep is slow.

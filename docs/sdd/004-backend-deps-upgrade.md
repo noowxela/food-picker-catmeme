@@ -1,7 +1,7 @@
 # SDD: Backend dependency and Node upgrade
 
 - **Repo:** `o000o_active/food-picker-catmeme`
-- **Status:** `approved`
+- **Status:** `implemented`
 - **Date:** 2026-09-23
 - **Related:** `docs/sdd/000-architecture.md`, `docs/architecture.md`, Render service `food-picker-api`
 
@@ -64,16 +64,24 @@ Lunch UI only needs `/v1/restaurants*` (unauthenticated). Auth/user routes are u
 
 ## 5. Acceptance criteria and verification
 
-- [ ] `backend/package.json` + lockfile use current majors for core deps (express, mongoose, jwt stack at minimum).
-- [ ] Node pin matches the chosen major in `.node-version`, `engines`, Render env / docs.
-- [ ] Deprecated mongoose connect flags removed; app boots against Atlas.
-- [ ] Local: `GET /v1/restaurants` and Home random/choose flows work.
-- [ ] Render: deploy green; `GET https://food-picker-api.onrender.com/v1/restaurants` returns JSON.
-- [ ] If Atlas upgrade in scope: cluster MongoDB version is current supported major (verified in Atlas UI).
+- [x] `backend/package.json` + lockfile use current majors for core deps (express, mongoose, jwt stack at minimum).
+- [x] Node pin matches the chosen major in `.node-version`, `engines`, Render env / docs.
+- [x] Deprecated mongoose connect flags removed; app boots against Atlas.
+- [x] Local: `GET /v1/restaurants` and Home random/choose flows work.
+- [x] Render: deploy green; `GET https://food-picker-api.onrender.com/v1/restaurants` returns JSON.
+- [x] If Atlas upgrade in scope: cluster MongoDB version is current supported major (verified in Atlas UI).
 
-## 6. Status history
+## 6. Implementation notes
+
+- Runtime: Node **24.21.0** (LTS), Express **5**, Mongoose **9**.
+- Render build: `npm --prefix backend ci --omit=dev --legacy-peer-deps` (fallback install) + `backend/.npmrc` `legacy-peer-deps=true` so eslint peer conflicts do not fail free-tier deploys.
+- Atlas `Cluster0` (`project-appxplore` DB on host `cluster0.gpufoeb`): MongoDB **8.0.32**, Free/M0. Already on the latest major available for M0; MCP `atlas-upgrade-cluster` only changes tier (Flex/M10), not server version. No paid tier bump performed.
+- Production smoke (2026-09-23): deploy `dep-dapb0qtbedkc73871d9g` **live**; `GET /v1/restaurants?limit=2` → 200, 25 total results.
+
+## 7. Status history
 
 | Date | Status | Note |
 | --- | --- | --- |
 | 2026-09-23 | draft | Waiting on Node Current vs LTS and Atlas UI upgrade scope. |
 | 2026-09-23 | approved | Node 24 LTS; mongoose + Atlas cluster both. |
+| 2026-09-23 | implemented | Node 24 + Express 5 + Mongoose 9 on Render; Atlas already 8.0.32. |

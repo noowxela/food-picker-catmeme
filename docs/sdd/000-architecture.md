@@ -13,8 +13,8 @@ A lunch picker. Locally the browser is an Express static site. In production the
 | Piece | Local | Production |
 | --- | --- | --- |
 | Frontend | `frontend/` `npm start` on port 3100 | GitHub Pages: https://noowxela.github.io/food-picker-catmeme/ |
-| Backend | `backend/` `npm run dev` on port 3000 | Render: https://food-picker-api.onrender.com |
-| Database | Atlas `project-appxplore` | Same Atlas cluster |
+| Backend | `backend/` `npm run dev` on port 3000 (Node 24, Express 5, Mongoose 9) | Render: https://food-picker-api.onrender.com |
+| Database | Atlas `project-appxplore` (MongoDB 8.0.32 on Cluster0) | Same Atlas cluster |
 
 Home, Restaurants, and History are separate HTML pages. `frontend/assets/js/foodPicker.js` runs only on Home. It calls `restaurants/randomRestaurants` and The Cat API, then paints `#catList` and `#restaurantTotal`.
 

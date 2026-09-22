@@ -1,6 +1,5 @@
 const express = require("express");
 require("express-group-routes");
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const app = express();
@@ -29,8 +28,8 @@ app.use(compression());
 app.use(express.static(path.join(__dirname)));
 
 // Parse JSON and URL-encoded data in incoming requests
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Enable CORS (Cross-Origin Resource Sharing) for cross-origin requests
 app.use(cors());
@@ -69,7 +68,7 @@ app.get("/main.js", function (req, res) {
 });
 
 // Handle unknown routes with a 404 status
-app.get("*", function (req, res) {
+app.get("/{*splat}", function (req, res) {
   res.status(404).send("unknown");
 });
 

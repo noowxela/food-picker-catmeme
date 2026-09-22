@@ -110,7 +110,7 @@ Notable Home behavior (see SDDs `001`, `002`):
 
 ## Backend
 
-Express boilerplate under `backend/src/`. Entry: `src/index.js` (mongoose connect, then listen). App: `src/app.js` (helmet, cors open, xss/mongo sanitize, passport JWT, `/v1` routes).
+Express boilerplate under `backend/src/`. Entry: `src/index.js` (mongoose connect, then listen). App: `src/app.js` (helmet, cors open, rate limit, passport JWT, `/v1` routes). Node **24**, Express **5**, Mongoose **9**.
 
 ### API surface used by the UI
 
@@ -207,7 +207,7 @@ flowchart TB
 | Concern | Choice |
 | --- | --- |
 | UI host | GitHub Pages (static only) |
-| API host | Render free Node service, `NODE_VERSION=20.18.1` |
+| API host | Render free Node service, `NODE_VERSION=24.21.0` (Express 5, Mongoose 9) |
 | Build | `npm --prefix backend ci` then `npm run start:render` |
 | Blueprint | [`render.yaml`](../render.yaml) |
 | Cold start | Free Render sleeps after idle |

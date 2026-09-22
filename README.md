@@ -34,7 +34,7 @@ render.yaml   Render blueprint for the API
 
 ## Run locally
 
-Needs Node 20 for the backend.
+Needs Node 24 LTS for the backend.
 
 ### 1. Backend
 
@@ -80,7 +80,7 @@ UI: http://localhost:3100
 
 Full steps: [`docs/deploy.md`](docs/deploy.md)
 
-- **API:** Render Web Service (`food-picker-api`), Node 20, Atlas `project-appxplore`
+- **API:** Render Web Service (`food-picker-api`), Node 24 LTS, Atlas `project-appxplore` (MongoDB 8.0)
 - **UI:** GitHub Pages via `.github/workflows/pages.yml`  
   Repository secrets: `API_BASE`, `CAT_API_KEY`  
   Pages source: GitHub Actions
