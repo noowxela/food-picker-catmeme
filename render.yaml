@@ -7,8 +7,8 @@ services:
     rootDir: backend
     plan: free
     region: singapore
-    buildCommand: yarn install --frozen-lockfile || yarn install
-    startCommand: yarn start:render
+    buildCommand: npm --prefix backend ci || npm --prefix backend install
+    startCommand: npm --prefix backend run start:render
     healthCheckPath: /v1/restaurants
     envVars:
       - key: NODE_ENV
