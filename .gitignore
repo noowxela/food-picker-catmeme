@@ -1,0 +1,11 @@
+# GitHub Pages site
+frontend/site/
+
+# OS / editor
+.DS_Store
+*.log
+
+# Env (keep examples)
+.env
+frontend/.env
+backend/.env

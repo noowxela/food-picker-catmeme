@@ -12,6 +12,7 @@
     "start": "node app.js",
     "dev": "cross-env NODE_ENV=development nodemon node app.js",
     "pro": "cross-env NODE_ENV=production nodemon node app.js",
+    "build:static": "bash scripts/build-static-site.sh",
     "start:pm2": "pm2 start ecosystem-dev.config.json --no-daemon",
     "start:pm2-production": "pm2 start ecosystem.config.json --no-daemon"
   },

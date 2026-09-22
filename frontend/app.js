@@ -11,6 +11,17 @@ const compression = require("compression");
 // Disable 'x-powered-by' header for security
 app.disable("x-powered-by");
 
+app.get("/assets/js/config.js", (req, res) => {
+  const apiBase = process.env.API_BASE || "http://localhost:3000/v1/";
+  res.type("application/javascript");
+  res.send(
+    [
+      `window.API_BASE = ${JSON.stringify(apiBase)};`,
+      `window.CAT_API_KEY = ${JSON.stringify(process.env.CAT_API_KEY || "")};`,
+    ].join("\n")
+  );
+});
+
 // Use compression middleware for response compression
 app.use(compression());
 
@@ -41,16 +52,20 @@ app.get("/", function (req, res) {
   res.sendFile("pages/index.html", { root: __dirname });
 });
 
-app.get("/home", (req, res) => {
+app.get(["/home", "/index.html"], (req, res) => {
   res.sendFile("pages/index.html", { root: __dirname });
 });
 
-app.get("/restaurants", function (req, res) {
+app.get(["/restaurants", "/restaurants.html"], function (req, res) {
   res.sendFile("pages/restaurants.html", { root: __dirname });
 });
 
-app.get("/history", function (req, res) {
+app.get(["/history", "/history.html"], function (req, res) {
   res.sendFile("pages/history.html", { root: __dirname });
+});
+
+app.get("/main.js", function (req, res) {
+  res.sendFile("pages/main.js", { root: __dirname });
 });
 
 // Handle unknown routes with a 404 status

@@ -1,0 +1,50 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build static site
+        working-directory: frontend
+        env:
+          API_BASE: ${{ secrets.API_BASE }}
+          CAT_API_KEY: ${{ secrets.CAT_API_KEY }}
+        run: |
+          if [ -z "$API_BASE" ]; then
+            echo "API_BASE secret is required (e.g. https://food-picker-catmeme-api.onrender.com/v1/)"
+            exit 1
+          fi
+          bash scripts/build-static-site.sh "$GITHUB_WORKSPACE/site"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

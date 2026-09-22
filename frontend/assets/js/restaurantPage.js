@@ -1,11 +1,17 @@
 $(document).ready(function () {
-  const ENDPOINT = "http://localhost:3000/v1/";
+  const ENDPOINT = window.API_BASE || "http://localhost:3000/v1/";
 
   let totalPages = 1;
+  let fullPageBodyHeight = 0;
+  let openRestaurantId = null;
+  const restaurantsById = {};
   var deleteRestaurantId = 1;
 
   // Function to retrieve restaurant data from the API
   function getRestaurantData(page) {
+    if (page === 1) {
+      fullPageBodyHeight = 0;
+    }
     const apiEndpoint = ENDPOINT + "restaurants";
 
     const filterName = $("#filter_name").val();
@@ -38,6 +44,8 @@ $(document).ready(function () {
       data: { page: page },
       success: function (data) {
         console.log("data : ", data);
+        const scroller = document.querySelector(".d-flex.flex-column.h-100");
+        const scrollTop = scroller ? scroller.scrollTop : 0;
         // Populate the table with restaurant data
         const restaurantList = $("#restaurant-list");
         restaurantList.empty();
@@ -45,33 +53,63 @@ $(document).ready(function () {
           ? toggleNoResultsRow(true)
           : toggleNoResultsRow(false);
         totalPages = data.totalPages;
+        Object.keys(restaurantsById).forEach(function (id) {
+          delete restaurantsById[id];
+        });
         data.results.forEach(function (restaurant) {
-          const deleteButton = `
-            <button class="btn btn-danger btn-delete" data-id="${restaurant.id}" data-bs-toggle="popover" data-bs-content="Are you sure?" data-bs-trigger="focus">
-              <i class="bi bi-trash"></i> Delete
-            </button>`;
+          restaurantsById[restaurant.id] = restaurant;
           restaurantList.append(
-            `<tr>
-              <td>${restaurant.name}</td>
-              <td>${restaurant.address}</td>
-              <td>${restaurant.category}</td>
-              <td>${deleteButton}</td>
+            `<tr data-id="${escapeHtml(restaurant.id)}">
+              <td>${escapeHtml(restaurant.name)}</td>
+              <td>${escapeHtml(restaurant.address)}</td>
+              <td>${escapeHtml(restaurant.category)}</td>
+              <td>
+                <div class="d-flex flex-nowrap gap-2">
+                  <button type="button" class="btn btn-secondary btn-sm btn-restaurant-info">Info</button>
+                  <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="${escapeHtml(restaurant.id)}">
+                    <i class="bi bi-trash"></i> Delete
+                  </button>
+                </div>
+              </td>
             </tr>`
           );
         });
-        $(".btn-delete").click(function () {
-          deleteRestaurantId = $(this).data("id");
-          // let restaurantId = $(this).data("id");
-          // $("#confirmDeleteModal").attr("data-id", restaurantId);
-          $("#confirmDeleteModal").show();
-        });
+        holdListHeight(data.results.length, data.limit || 10);
         createPagination(totalPages, data.page);
+        if (scroller) {
+          scroller.scrollTop = scrollTop;
+          requestAnimationFrame(function () {
+            scroller.scrollTop = scrollTop;
+          });
+        }
       },
       error: function (error) {
         console.log("Error fetching data: ", error);
       },
     });
   }
+  $("#restaurant-list").on("click", ".btn-delete", function (event) {
+    event.stopPropagation();
+    deleteRestaurantId = $(this).data("id");
+    $("#confirmDeleteModal").show();
+  });
+
+  $("#restaurant-list").on("click", "tr", function (event) {
+    if ($(event.target).closest(".btn-delete").length) {
+      return;
+    }
+    const restaurant = restaurantsById[$(this).attr("data-id")];
+    if (!restaurant) {
+      return;
+    }
+    toggleRestaurantInfo(restaurant);
+  });
+
+  $("#restaurantInfoModal").on("hidden.bs.modal", function () {
+    openRestaurantId = null;
+    $("#restaurantInfoMap").empty();
+  });
+
   $(".cancelDeleteBtn").on("click", function () {
     $("#confirmDeleteModal").hide();
   });
@@ -112,25 +150,36 @@ $(document).ready(function () {
 
   // Function to create pagination links
   function createPagination(totalPages, currentPage) {
-    const pagination = $("#pagination");
-    pagination.empty();
+    const paginations = $(".restaurant-pagination");
+    paginations.empty();
     for (let i = 1; i <= totalPages; i++) {
       const liClass = i === currentPage ? "page-item active" : "page-item";
-      pagination.append(
+      paginations.append(
         `<li class="${liClass}" data-page="${i}">
-          <a class="page-link" href="#">${i}</a>
+          <button type="button" class="page-link">${i}</button>
         </li>`
       );
     }
 
-    // Add click event for pagination links
-    pagination.find(".page-link").click(function (e) {
-      e.preventDefault();
-      const page = $(this).text();
-      pagination.find(".page-item").removeClass("active");
-      $(this).parent().addClass("active");
+    paginations.find(".page-link").click(function () {
+      const page = $(this).parent().data("page");
       getRestaurantData(page);
     });
+  }
+
+  function holdListHeight(rowCount, pageSize) {
+    const spacer = $("#restaurant-list-spacer");
+    const listHeight = $("#restaurant-list").outerHeight() || 0;
+    if (rowCount >= pageSize) {
+      fullPageBodyHeight = listHeight;
+      spacer.height(0);
+      return;
+    }
+    if (!fullPageBodyHeight || rowCount === 0) {
+      spacer.height(0);
+      return;
+    }
+    spacer.height(Math.max(0, fullPageBodyHeight - listHeight));
   }
 
   // Initial call to retrieve the first page of data
@@ -225,6 +274,47 @@ $(document).ready(function () {
       },
     });
   }
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function toggleRestaurantInfo(restaurant) {
+    const modalElement = document.getElementById("restaurantInfoModal");
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    if (openRestaurantId === restaurant.id && modalElement.classList.contains("show")) {
+      modal.hide();
+      return;
+    }
+
+    const name = restaurant.name || "Restaurant";
+    const address = restaurant.address || "";
+    const category = restaurant.category || "";
+    $("#restaurantInfoTitle").text(name);
+    $("#restaurantInfoName").text(name);
+    $("#restaurantInfoAddress").text(address || "No address saved");
+    $("#restaurantInfoCategory").text(category ? "Category: " + category : "");
+
+    const map = $("#restaurantInfoMap");
+    map.empty();
+    if (address) {
+      const query = encodeURIComponent(name + " " + address);
+      map.append(
+        `<iframe title="Map preview for ${escapeHtml(name)}" src="https://maps.google.com/maps?q=${query}&z=16&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`
+      );
+    } else {
+      map.append("<p class='mb-0'>No address available for a map preview.</p>");
+    }
+
+    openRestaurantId = restaurant.id;
+    if (!modalElement.classList.contains("show")) {
+      modal.show();
+    }
+  }
+
   function toggleNoResultsRow(show) {
     if (show) {
       const restaurantList = $("#restaurant-list");
