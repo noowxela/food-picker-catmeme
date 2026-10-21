@@ -4,6 +4,7 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { restaurantService, bookingService } = require('../services');
 const { Restaurant, Booking } = require('../models');
+const logger = require('../config/logger');
 
 const createRestaurant = catchAsync(async (req, res) => {
   const restaurant = await restaurantService.createRestaurant(req.body);
@@ -18,7 +19,7 @@ const getRestaurants = catchAsync(async (req, res) => {
 });
 
 const getRestaurant = catchAsync(async (req, res) => {
-  console.log('req.params.restaurantId : ', req.params.restaurantId);
+  logger.debug(`getRestaurant restaurantId: ${req.params.restaurantId}`);
   const restaurant = await restaurantService.getRestaurantById(req.params.restaurantId);
   if (!restaurant) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
@@ -82,11 +83,11 @@ const randomRestaurants = catchAsync(async (req, res) => {
 
   const result = await Restaurant.aggregate(pipeline)
     .exec()
-    .then((result) => {
-      return result[0];
+    .then((aggregateResults) => {
+      return aggregateResults[0];
     })
     .catch((error) => {
-      console.error('Error retrieving random restaurants:', error);
+      logger.error(`Error retrieving random restaurants: ${(error && error.stack) || error}`);
     });
   res.send(result);
 });
@@ -126,7 +127,7 @@ const restaurantHistory = catchAsync(async (req, res) => {
       return results;
     })
     .catch((error) => {
-      console.error('Error retrieving data:', error);
+      logger.error(`Error retrieving restaurant history: ${(error && error.stack) || error}`);
     });
   res.send(result);
 });

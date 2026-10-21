@@ -21,19 +21,21 @@ const createBooking = async (bookingBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryBookings = async (filter, options) => {
-  if (filter.name) {
-    filter.name = { $regex: filter.name, $options: 'i' };
+  const query = { ...filter };
+
+  if (query.name) {
+    query.name = { $regex: filter.name, $options: 'i' };
   }
 
-  if (filter.address) {
-    filter.address = { $regex: filter.address, $options: 'i' };
+  if (query.address) {
+    query.address = { $regex: filter.address, $options: 'i' };
   }
 
-  if (filter.category) {
-    filter.category = { $regex: filter.category, $options: 'i' };
+  if (query.category) {
+    query.category = { $regex: filter.category, $options: 'i' };
   }
 
-  const bookings = await Booking.paginate(filter, options);
+  const bookings = await Booking.paginate(query, options);
   return bookings;
 };
 
