@@ -3,7 +3,7 @@
 - **Repo:** `o000o_active/food-picker-catmeme`
 - **Status:** `implemented`
 - **Date:** 2026-09-22
-- **Related:** `docs/sdd/000-architecture.md`, approved plan GH Pages hosting
+- **Related:** `docs/architecture.md`, approved plan GH Pages hosting
 
 ## 1. Context / current architecture
 

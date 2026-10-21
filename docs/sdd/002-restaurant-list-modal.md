@@ -3,7 +3,7 @@
 - **Repo:** `aaa_interview/alex-woon-jun-rong`
 - **Status:** `implemented`
 - **Date:** 2026-09-22
-- **Related:** `docs/sdd/000-architecture.md`
+- **Related:** `docs/architecture.md`
 
 ## 1. Context / current architecture
 

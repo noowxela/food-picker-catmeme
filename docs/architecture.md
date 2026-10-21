@@ -3,7 +3,7 @@
 Lunch picker: browser UI + Express/Mongo API + The Cat API for card images.
 
 GitHub: [noowxela/food-picker-catmeme](https://github.com/noowxela/food-picker-catmeme)  
-Related SDD notes: [`docs/sdd/000-architecture.md`](sdd/000-architecture.md) · Deploy: [`docs/deploy.md`](deploy.md)
+SDD index: [`docs/sdd/INDEX.md`](sdd/INDEX.md) · Deploy: [`docs/deploy.md`](deploy.md)
 
 ## System overview
 

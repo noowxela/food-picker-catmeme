@@ -3,7 +3,7 @@
 - **Repo:** `o000o_active/food-picker-catmeme`
 - **Status:** `implemented`
 - **Date:** 2026-09-23
-- **Related:** `docs/sdd/000-architecture.md`, `docs/architecture.md`, Render service `food-picker-api`
+- **Related:** `docs/architecture.md`, `docs/architecture.md`, Render service `food-picker-api`
 
 ## 1. Context / current architecture
 
