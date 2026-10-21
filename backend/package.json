@@ -11,11 +11,10 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "start:render": "node src/index.js",
-    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "dev": "cross-env NODE_ENV=development node --watch src/index.js",
     "test": "jest -i --colors --verbose --detectOpenHandles",
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage",
-    "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.js",
@@ -53,7 +52,7 @@
     "cors": "^2.8.6",
     "cross-env": "^10.1.0",
     "dotenv": "^18.0.3",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
     "http-status": "^1.7.4",
@@ -72,7 +71,6 @@
     "winston": "^3.19.0"
   },
   "devDependencies": {
-    "coveralls": "^3.0.7",
     "eslint": "^10.11.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -84,8 +82,18 @@
     "jest": "^30.5.2",
     "lint-staged": "^17.5.1",
     "node-mocks-http": "^1.8.0",
-    "nodemon": "^3.1.14",
     "prettier": "^3.9.8",
     "supertest": "^7.3.0"
+  },
+  "overrides": {
+    "js-yaml": "4.3.2",
+    "lodash": "4.18.1",
+    "follow-redirects": "1.16.1",
+    "anymatch": {
+      "picomatch": "2.3.2"
+    },
+    "readdirp": {
+      "picomatch": "2.3.2"
+    }
   }
 }
