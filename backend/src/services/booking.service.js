@@ -86,7 +86,7 @@ const deleteBookingById = async (bookingId) => {
   if (!booking) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Booking not found');
   }
-  await booking.remove();
+  await booking.deleteOne();
   return booking;
 };
 

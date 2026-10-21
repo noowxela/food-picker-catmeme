@@ -89,7 +89,7 @@ const deleteRestaurantById = async (restaurantId) => {
   if (!restaurant) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Restaurant not found');
   }
-  await restaurant.remove();
+  await restaurant.deleteOne();
   return restaurant;
 };
 
