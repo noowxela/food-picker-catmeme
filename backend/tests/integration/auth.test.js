@@ -190,6 +190,32 @@ describe('Auth routes', () => {
       await request(app).post('/v1/auth/refresh-tokens').send().expect(httpStatus.BAD_REQUEST);
     });
 
+    test('should reject the old refresh token after refreshing within the same second', async () => {
+      await insertUsers([userOne]);
+      // Freeze the clock so login and refresh happen in the same second (same iat/exp).
+      const now = Date.now();
+      jest.spyOn(Date, 'now').mockReturnValue(now);
+
+      const loginRes = await request(app)
+        .post('/v1/auth/login')
+        .send({ email: userOne.email, password: userOne.password })
+        .expect(httpStatus.OK);
+      const oldRefreshToken = loginRes.body.tokens.refresh.token;
+
+      const refreshRes = await request(app)
+        .post('/v1/auth/refresh-tokens')
+        .send({ refreshToken: oldRefreshToken })
+        .expect(httpStatus.OK);
+      const newRefreshToken = refreshRes.body.refresh.token;
+
+      expect(newRefreshToken).not.toBe(oldRefreshToken);
+      await request(app)
+        .post('/v1/auth/refresh-tokens')
+        .send({ refreshToken: oldRefreshToken })
+        .expect(httpStatus.UNAUTHORIZED);
+      await request(app).post('/v1/auth/refresh-tokens').send({ refreshToken: newRefreshToken }).expect(httpStatus.OK);
+    });
+
     test('should return 401 error if refresh token is signed using an invalid secret', async () => {
       await insertUsers([userOne]);
       const expires = moment().add(config.jwt.refreshExpirationDays, 'days');

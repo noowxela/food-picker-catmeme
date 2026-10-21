@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpStatus = require('http-status');
@@ -21,6 +22,8 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
     iat: moment().unix(),
     exp: expires.unix(),
     type,
+    // Unique token id so tokens issued in the same second (same iat/exp) are never identical.
+    jti: crypto.randomUUID(),
   };
   return jwt.sign(payload, secret);
 };
