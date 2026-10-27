@@ -14,7 +14,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: NODE_VERSION
-        value: "24.21.0"
+        value: "24"
       - key: MONGODB_URL
         sync: false
       - key: JWT_SECRET

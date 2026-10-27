@@ -6,7 +6,7 @@
   "main": "src/index.js",
   "license": "MIT",
   "engines": {
-    "node": "24.x"
+    "node": ">=24"
   },
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",

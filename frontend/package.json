@@ -17,7 +17,7 @@
     "start:pm2-production": "pm2 start ecosystem.config.json --no-daemon"
   },
   "engines": {
-    "node": "24.x"
+    "node": ">=24"
   },
   "dependencies": {
     "compression": "^1.8.2",
